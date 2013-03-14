@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style type="text/css">
-      html, body { height: 100%; margin: 0; padding: 0; }
-      #stage { margin: 1em; }
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      img {
+        margin: 0;
+        vertical-align: bottom;
+      }
     </style>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
       (function() {
         "use strict";
 
         var Multiplier = {
-          models: {
-            m: function(params) {
-              this.gif      = params.gif      || "http://data.damonzucconi.com/uploads/Drop/rgb-short.gif";
-              this.multiple = params.multiple || 100;
-              this.interval = params.interval || 33;
-              this.width    = params.width    || "100%";
-            }
+          model: function(params) {
+            this.gif      = params.gif      || "http://data.damonzucconi.com/uploads/Drop/rgb-short.gif";
+            this.multiple = params.multiple || 100;
+            this.interval = params.interval || 33;
+            this.width    = params.width    || "100%";
           },
 
           helpers: {
@@ -40,29 +46,27 @@
 
           initialize: function() {
             var i = 0,
-                m = new Multiplier.models.m(Multiplier.helpers.getParams()),
-                $stage = $("#stage"),
-                append,
-                img;
+                m = new Multiplier.model(Multiplier.helpers.getParams()),
+                stage = document.getElementById("stage");
 
             (function append() {
               setTimeout(function() {
                 if (i++ < m.multiple) {
-                  img = new Image();
-
-                  $(img).load(function() {}).attr("src", m.gif + "?" + i);
-                  $stage.append(img);
-
+                  var img = new Image();
+                  img.src = (m.gif + "?" + i);
+                  
+                  stage.appendChild(img);
+                  
                   append();
                 }
               }, m.interval);
             }());
 
-            $stage.width(m.width);
+            stage.style.width = m.width;
           }
-        }
+        };
 
-        $(function() { Multiplier.initialize(); });
+        document.addEventListener("DOMContentLoaded", Multiplier.initialize, false);
       }());
     </script>
   </head>

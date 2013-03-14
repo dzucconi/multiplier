@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #stage { margin: 1em; }
+    </style>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+      (function() {
+        "use strict";
+
+        var Multiplier = {
+          models: {
+            m: function(params) {
+              this.gif      = params.gif      || "http://data.damonzucconi.com/uploads/Drop/rgb-short.gif";
+              this.multiple = params.multiple || 100;
+              this.interval = params.interval || 33;
+              this.width    = params.width    || "100%";
+            }
+          },
+
+          helpers: {
+            getParams: function () {
+              var i,
+                hash,
+                vars = {},
+                hashes = window.location.href.slice(window.location.href.indexOf("?") + 1)
+                                             .split("&");
+
+              for (i = hashes.length - 1; i >= 0; i--) {
+                hash = hashes[i].split("=");
+                vars[hash[0]] = hash[1];
+              }
+
+              return vars;
+            }
+          },
+
+          initialize: function() {
+            var i = 0,
+                m = new Multiplier.models.m(Multiplier.helpers.getParams()),
+                $stage = $("#stage"),
+                append,
+                img;
+
+            (function append() {
+              setTimeout(function() {
+                if (i++ < m.multiple) {
+                  img = new Image();
+
+                  $(img).load(function() {}).attr("src", m.gif + "?" + i);
+                  $stage.append(img);
+
+                  append();
+                }
+              }, m.interval);
+            }());
+
+            $stage.width(m.width);
+          }
+        }
+
+        $(function() { Multiplier.initialize(); });
+      }());
+    </script>
+  </head>
+  
+  <body>
+    <div id="stage"></div>
+  </body>
+</html>

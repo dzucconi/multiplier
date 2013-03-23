@@ -21,10 +21,10 @@
 
         var Multiplier = {
           model: function(params) {
-            this.gif      = params.gif      || "http://data.damonzucconi.com/uploads/Drop/rgb-short.gif";
-            this.multiple = params.multiple || 200;
+            this.gif      = params.gif      || "img/rgb-short.gif";
+            this.multiple = params.multiple || 800;
             this.interval = params.interval || 33;
-            this.width    = params.width    || "50%";
+            this.width    = params.width    || "650px";
           },
 
           helpers: {
@@ -44,23 +44,31 @@
             }
           },
 
+          validateFileType: function(filename) {
+            return /\.gif$/i.test(filename);
+          },
+
           initialize: function() {
             var i = 0,
                 m = new Multiplier.model(Multiplier.helpers.getParams()),
                 stage = document.getElementById("stage");
 
-            (function append() {
-              setTimeout(function() {
-                if (i++ < m.multiple) {
-                  var img = new Image();
-                  img.src = (m.gif + "?" + i);
-                  
-                  stage.appendChild(img);
-                  
-                  append();
-                }
-              }, m.interval);
-            }());
+            if (Multiplier.validateFileType(m.gif)) {
+              (function append() {
+                setTimeout(function() {
+                  if (i++ < m.multiple) {
+                    var img = new Image();
+                    img.src = (m.gif + "?" + i);
+                    
+                    stage.appendChild(img);
+                    
+                    append();
+                  }
+                }, m.interval);
+              }());
+            } else {
+              stage.innerHTML = "Only .gifs please";
+            };
 
             stage.style.width = m.width;
           }

@@ -13,6 +13,12 @@
         margin: 0;
         vertical-align: bottom;
       }
+
+      #stage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+      }
     </style>
 
     <script>
@@ -21,10 +27,11 @@
 
         var Multiplier = {
           model: function(params) {
-            this.gif      = params.gif      || "img/rgb-short.gif";
-            this.multiple = params.multiple || 800;
+            this.gif = params.gif || "img/rgb-short.gif";
             this.interval = params.interval || 33;
-            this.width    = params.width    || "650px";
+            this.x = params.x || 10;
+            this.y = params.y || 5;
+            this.multiple = this.x * this.y;
           },
 
           helpers: {
@@ -48,29 +55,42 @@
             return /\.gif$/i.test(filename);
           },
 
+          setStage: function(stage, width, height) {
+            stage.style.width = width + "px";
+            stage.style.height = height + "px";
+            stage.style.marginLeft = -(width / 2) + "px";
+            stage.style.marginTop = -(height / 2) + "px";
+          },
+
           initialize: function() {
             var i = 0,
                 m = new Multiplier.model(Multiplier.helpers.getParams()),
-                stage = document.getElementById("stage");
+                stage = document.getElementById("stage"),
+                _img = new Image();
+            
+            _img.src = m.gif;
+            _img.onload = function() {
+              var width = (this.width * m.x),
+                  height = (this.height * m.y);
 
-            if (Multiplier.validateFileType(m.gif)) {
-              (function append() {
-                setTimeout(function() {
-                  if (i++ < m.multiple) {
-                    var img = new Image();
-                    img.src = (m.gif + "?" + i);
-                    
-                    stage.appendChild(img);
-                    
-                    append();
-                  }
-                }, m.interval);
-              }());
-            } else {
-              stage.innerHTML = "Only .gifs please";
+              Multiplier.setStage(stage, width, height);
+
+              if (Multiplier.validateFileType(m.gif)) {
+                (function append() {
+                  setTimeout(function() {
+                    if (i++ < m.multiple) {
+                      var img = new Image();
+                      img.src = m.gif + "?" + i;
+                      
+                      stage.appendChild(img);
+                      append();
+                    }
+                  }, m.interval);
+                }());
+              } else {
+                stage.innerHTML = "Only .gifs please";
+              };
             };
-
-            stage.style.width = m.width;
           }
         };
 

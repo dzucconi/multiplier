@@ -55,40 +55,39 @@
             return /\.gif$/i.test(filename);
           },
 
-          setStage: function(stage, width, height) {
-            stage.style.width = width + "px";
-            stage.style.height = height + "px";
-            stage.style.marginLeft = -(width / 2) + "px";
-            stage.style.marginTop = -(height / 2) + "px";
+          setStage: function(width, height) {
+            this.stage.style.width = width + "px";
+            this.stage.style.height = height + "px";
+            this.stage.style.marginLeft = -(width / 2) + "px";
+            this.stage.style.marginTop = -(height / 2) + "px";
           },
 
           initialize: function() {
-            var i = 0,
-                m = new Multiplier.model(Multiplier.helpers.getParams()),
-                stage = document.getElementById("stage"),
-                _img = new Image();
+            var context = Multiplier,
+                img = new Image(),
+                i = 0;
             
-            _img.src = m.gif;
-            _img.onload = function() {
-              var width = (this.width * m.x),
-                  height = (this.height * m.y);
+            context.stage = document.getElementById("stage");
+            context.model = new Multiplier.model(Multiplier.helpers.getParams());
 
-              Multiplier.setStage(stage, width, height);
+            img.src = context.model.gif;
+            img.onload = function() {
+              Multiplier.setStage((this.width * context.model.x), (this.height * context.model.y));
 
-              if (Multiplier.validateFileType(m.gif)) {
+              if (Multiplier.validateFileType(context.model.gif)) {
                 (function append() {
                   setTimeout(function() {
-                    if (i++ < m.multiple) {
+                    if (i++ < context.model.multiple) {
                       var img = new Image();
-                      img.src = m.gif + "?" + i;
+                      img.src = context.model.gif + "?" + i;
                       
-                      stage.appendChild(img);
+                      Multiplier.stage.appendChild(img);
                       append();
                     }
-                  }, m.interval);
+                  }, context.model.interval);
                 }());
               } else {
-                stage.innerHTML = "Only .gifs please";
+                Multiplier.stage.innerHTML = "Only .gifs please";
               };
             };
           }

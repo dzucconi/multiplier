@@ -1,9 +1,9 @@
 # Options
 
-* gif (url of .gif)
-* interval (integer; value of milliseconds between instances appended)
-* x (integer; multiple of instances on X-axis)
-* y (integer; multiple of instances on Y-axis)
+* src (url of img)
+* interval (integer; value of milliseconds between instances appended; defaults to 33)
+* x (integer; multiple of instances on X-axis; defaults to 10)
+* y (integer; multiple of instances on Y-axis; defaults to 5)
 
 ----
 

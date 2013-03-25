@@ -27,7 +27,7 @@
 
         var Multiplier = {
           model: function(params) {
-            this.gif = params.gif || "http://drop.damonzucconi.com.s3.amazonaws.com/img/rgb-short_01.gif";
+            this.src = params.src || "http://drop.damonzucconi.com.s3.amazonaws.com/img/rgb-short_01.gif";
             this.interval = params.interval || 33;
             this.x = params.x || 10;
             this.y = params.y || 5;
@@ -51,10 +51,6 @@
             }
           },
 
-          validateFileType: function(filename) {
-            return /\.gif$/i.test(filename);
-          },
-
           setStage: function(width, height) {
             this.stage.style.width = width + "px";
             this.stage.style.height = height + "px";
@@ -63,32 +59,28 @@
           },
 
           initialize: function() {
-            var context = Multiplier,
+            var M = Multiplier,
                 img = new Image(),
                 i = 0;
             
-            context.stage = document.getElementById("stage");
-            context.model = new Multiplier.model(Multiplier.helpers.getParams());
+            M.stage = document.getElementById("stage");
+            M.model = new M.model(M.helpers.getParams());
 
-            img.src = context.model.gif;
+            img.src = M.model.src;
             img.onload = function() {
-              Multiplier.setStage((this.width * context.model.x), (this.height * context.model.y));
+              M.setStage((this.width * M.model.x), (this.height * M.model.y));
 
-              if (Multiplier.validateFileType(context.model.gif)) {
-                (function append() {
-                  setTimeout(function() {
-                    if (i++ < context.model.multiple) {
-                      var img = new Image();
-                      img.src = context.model.gif + "?" + i;
-                      
-                      Multiplier.stage.appendChild(img);
-                      append();
-                    }
-                  }, context.model.interval);
-                }());
-              } else {
-                Multiplier.stage.innerHTML = "Only .gifs please";
-              };
+              (function append() {
+                setTimeout(function() {
+                  if (i++ < M.model.multiple) {
+                    var img = new Image();
+                    img.src = M.model.src + "?" + i;
+                    
+                    M.stage.appendChild(img);
+                    append();
+                  }
+                }, M.model.interval);
+              }());
             };
           }
         };
